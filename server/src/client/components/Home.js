@@ -1,5 +1,10 @@
 import React from "react";
 
 export default () => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <div>Home</div>
+      <button onClick={() => console.log("Button pressed")}>Press me</button>
+    </div>
+  );
 };

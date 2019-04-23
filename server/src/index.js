@@ -7,6 +7,8 @@
 // We can just use ES2015 syntax instead of CommonJS
 import "babel-polyfill";
 import express from "express";
+import { matchRoutes } from "react-router-config";
+import Routes from "./client/Routes";
 import renderer from "./helpers/renderer";
 import createStore from "./helpers/createStore";
 
@@ -17,10 +19,16 @@ app.use(express.static("public"));
 app.get("*", (req, res) => {
   const store = createStore();
 
-  // Some logic to initialized
-  // and load data into store
+  // Returns a list of promises to show
+  // progress of the requests
+  const promises = matchRoutes(Routes, req.path).map(({ route }) => {
+    return route.loadData ? route.loadData(store) : null;
+  });
 
-  res.send(renderer(req, store));
+  // When running this, the store is now full of data from loadData()
+  Promise.all(promises).then(() => {
+    res.send(renderer(req, store));
+  });
 });
 
 app.listen(3000, () => {

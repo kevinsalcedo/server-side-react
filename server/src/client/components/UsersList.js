@@ -27,6 +27,14 @@ function mapStateToProps(state) {
   return { users: state.users };
 }
 
+// This function runs before the application is rendered
+function loadData(store) {
+  // Fetch users returns a promise containing network req
+  // Into the dispatch store
+  return store.dispatch(fetchUsers());
+}
+
+export { loadData };
 export default connect(
   mapStateToProps,
   { fetchUsers }
